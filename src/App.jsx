@@ -51,14 +51,13 @@ function App() {
   return (
     <>
       {!showQuestions &&
-        <section id="intro">
+        <section className="intro-page">
           <h1>Quizzical</h1>
           <p className="description">
-            Quizzical game is a fun and interactive way to test your knowledge on various topics. It
+            Quizzical game is a fun and interactive way to test your knowledge on various topics.
           </p>
           <button
             type="button"
-            className="counter"
             onClick={() => startQuiz()}
           >
             Start Quiz
@@ -66,14 +65,13 @@ function App() {
         </section>
       }
       {showQuestions &&
-        <section id="questions">
+        <section className="questions-page">
           <h1>Questions</h1>
           {questions.map((question, index) => (
             <Question key={question.id} question={question} />
           ))}
           <button
             type="button"
-            className="counter"
             onClick={() => checkAnswers()}
           >
             Check Answers
