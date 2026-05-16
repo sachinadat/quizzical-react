@@ -48,6 +48,16 @@ p {
   margin: 0;
 }
 
+section.intro-page select {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #4D5B9E;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  color: #293264;
+}
+
 button {
   background-color: #4D5B9E;
   font-family: "Inter", sans-serif;
