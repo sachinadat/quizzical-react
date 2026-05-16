@@ -9,6 +9,7 @@ import { decode } from 'html-entities'
 
 function App() {
   const [questions, setQuestions] = useState([])
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   // Fisher-Yates (Knuth) Shuffle algorithm
   function shuffleArray(array) {
@@ -19,34 +20,86 @@ function App() {
     return array;
   }
 
+  function selectOption(questionId, optionValue) {
+    console.log(`Selected option: ${optionValue} for question ID: ${questionId}`)
+    setQuestions(prevQuestions => {
+      return prevQuestions.map(question => {
+        if (question.id === questionId) {
+          const updatedOptions = question.answerOptions.map(option => {
+            return {
+              ...option,
+              isSelected: option.value === optionValue
+            }
+          })
+          return {
+            ...question,
+            answerOptions: updatedOptions
+          }
+        } else {
+          return question
+        }
+      })
+    })
+  }
+
   const startQuiz = () => {
-    console.log('Fetching questions...')
+    getQuestions()
+  }
+
+  const playAgain = () => {
+    console.log('Playing again!')
+    setIsSubmitted(false)
+    getQuestions()
+  }
+
+  const getQuestions = () => {
     const url = 'https://opentdb.com/api.php?amount=5&type=multiple'
     fetch(url)
       .then(res => res.json())
       .then(data => {
         const decodedQuestions = data.results.map(question => {
+          const answerOptions = [...question.incorrect_answers.map(decode), decode(question.correct_answer)]
+            .map(o => ({ value: o, isSelected: false }))
           return {
             ...question,
             id: nanoid(),
             question: decode(question.question),
             correct_answer: decode(question.correct_answer),
             incorrect_answers: question.incorrect_answers.map(decode),
-            answerOptions: shuffleArray([...question.incorrect_answers.map(decode), decode(question.correct_answer)])
+            answerOptions: shuffleArray(answerOptions)
           }
         })
-        console.log(decodedQuestions)
         setQuestions(decodedQuestions)
       })
       .catch(error => console.error(error))
-  }
+    }
 
   const checkAnswers = () => {
     console.log('Checking answers!')
+    setIsSubmitted(true)
   }
 
   // derived 
   const showQuestions = questions.length > 0
+  const questionElements = questions.map(
+    (question) => (
+      <Question
+        key={question.id}
+        question={question}
+        isSubmitted={isSubmitted}
+        selectOption={(id, value) => selectOption(id, value)}
+      />
+    )
+  )
+  const score = isSubmitted ? questions.reduce((total, question) => {
+    const selectedOption = question.answerOptions.find(option => option.isSelected)
+    if (selectedOption && selectedOption.value === question.correct_answer) {
+      return total + 1
+    } else {
+      return total
+    }
+  }, 0) : 0
+  const scoreText = `You scored ${score}/${questions.length} correct answers`
 
   return (
     <>
@@ -66,16 +119,30 @@ function App() {
       }
       {showQuestions &&
         <section className="questions-page">
-          <h1>Questions</h1>
-          {questions.map((question, index) => (
-            <Question key={question.id} question={question} />
-          ))}
-          <button
-            type="button"
-            onClick={() => checkAnswers()}
-          >
-            Check Answers
-          </button>
+          {questionElements}
+          <div className='buttons'>
+            {!isSubmitted &&
+              <button
+                type="button"
+                className='btn-check-answers'
+                onClick={() => checkAnswers()}
+              >
+                Check Answers
+              </button>
+            }
+            {isSubmitted &&
+              <span className='scoreText'>{scoreText}</span>
+            }
+            {isSubmitted &&
+              <button
+                type="button"
+                className='btn-play-again'
+                onClick={() => playAgain()}
+              >
+                Play again
+              </button>
+            }
+          </div>
         </section>
       }
     </>

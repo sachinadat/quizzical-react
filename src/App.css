@@ -18,3 +18,65 @@ section.intro-page > .description {
 section.intro-page > button {
   padding: 10px 30px;
 }
+
+section.questions-page {
+  margin: 0 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+}
+
+section.questions-page > .question {
+  margin-bottom: 20px;
+  text-align: left;
+  border-bottom: 1px solid #DBDEF0;
+}
+
+section.questions-page > .question h3 {
+  font-family: Karla, sans-serif;
+  font-size: 1em;
+  font-weight: 700;
+  margin: 0 0 15px 0;
+}
+
+section.questions-page > .question .options {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+section.questions-page > .question button {
+  background-color: transparent;
+  color: #293264;
+  border: 1px solid #4D5B9E;
+  margin: 0;
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 0.65em;
+  font-weight: 550;
+}
+
+section.questions-page > .question button.selected {
+  background-color: #D6DBF5;
+}
+
+section.questions-page > .question button.right {
+  background-color: #94D7A2;
+}
+
+section.questions-page > .question button.wrong {
+  background-color: #F8BCBC;
+}
+
+section.questions-page .btn-check-answers, .btn-play-again {
+  align-self: center;
+  padding: 10px 30px;
+}
+
+.scoreText {
+  font-weight: 800;
+  font-size: 0.8em;
+  margin-right: 20px;
+}
